@@ -11,19 +11,18 @@ var publish = new Publish();
 const interval = 10000;
 
 //Get List of Temperature Sensors
-//var sensorList = sensor.ListSensors();
+var sensorList = sensor.ListSensors();
 
 //Setup interval to read sensors every 5min
 setInterval(() => {
   try {
     //Read Temperature
-    //var fermentTemp = sensor.ReadTemp(sensorList(0));
-    //var mashTemp = sensor.ReadTemp(sensorList(1));
-    var fermentTemp = 12;
-    var mashTemp = 15;
+    var fermentTemp = sensor.ReadTemp(sensorList(0));
+    var mashTemp = sensor.ReadTemp(sensorList(1));
+
     //Publish to MQTT
-    publish.PublishTopics(Client, fermentTemp);
-    publish.PublishTopics(Client, mashTemp);
+    publish.PublishFermenter(Client, fermentTemp);
+    publish.PublishMash(Client, mashTemp);
 
   } catch (err) {
     console.log(err);
