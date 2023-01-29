@@ -1,27 +1,35 @@
 const options = { retain: true, qos: 1 };
-var client;
+var Client;
 //publish to topic on interval
 module.exports = class PublishTopics {
-    PublishTopics(Client){
-        client = Client;
-    }
+  constructor(client) {
+    Client = client;
+  }
 
-    PublishFermenter(client, temp) {
-            if (client.connected) {
-                console.log(`Sending Temp ${temp}`);
-                client.publish("Sensor/Tank1/FermenterTemp", temp.toString(), options);
-            } else {
-                console.log("Client is not connected");
-                throw new error("Client Disconnected");
-            }
+  PublishFermenter(fermenterControl) {
+    if (Client.connected) {
+      //console.log(`Sending Temp ${temp}`);
+      Client.publish(
+        "Sensor/Fermenter/Temperature",
+        fermenterControl.current.temperature.toString(),
+        options
+      );
+    } else {
+      console.log("Client is not connected");
+      throw new error("Client Disconnected");
     }
+  }
 
-    PublishMash(client, temp){
-        if(client.connected){
-            client.publish("Sensor/Chiller/Temperature", temp.toString(), options);
-        }else{
-            console.log("Client is not connected");
-            throw new error("Client Disconnected");
-        }
+  PublishChiller(chillerControl) {
+    if (Client.connected) {
+      Client.publish(
+        "Sensor/Chiller/Temperature",
+        chillerControl.current.temperature.toString(),
+        options
+      );
+    } else {
+      console.log("Client is not connected");
+      throw new error("Client Disconnected");
     }
-}
+  }
+};
