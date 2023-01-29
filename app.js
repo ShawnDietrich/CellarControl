@@ -1,39 +1,32 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var helmet = require('helmet');
-const MQTTFunctions = require('./mqtt');
+//Dependencies
+var Client = require("./mqtt/index");
+var Publish = require("./mqtt/publish");
+var SensorClass = require("./Sensor/CollectData");
 
-//import routes
-var sensorRouter = require('./routes/airlock')
+//Class instance
+var sensor = new SensorClass();
+var publish = new Publish();
 
-var app = express();
+//global variables
+const interval = 10000;
 
+//Get List of Temperature Sensors
+//var sensorList = sensor.ListSensors();
 
-app.use(logger('dev'));
-app.use(helmet());
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+//Setup interval to read sensors every 5min
+setInterval(() => {
+  try {
+    //Read Temperature
+    //var fermentTemp = sensor.ReadTemp(sensorList(0));
+    //var mashTemp = sensor.ReadTemp(sensorList(1));
+    var fermentTemp = 12;
+    var mashTemp = 15;
+    //Publish to MQTT
+    publish.PublishTopics(Client, fermentTemp);
+    publish.PublishTopics(Client, mashTemp);
 
-app.use('/sensor', sensorRouter);
-
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
-});
-
-// error handler
-app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
-
-module.exports = app;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}, interval);
