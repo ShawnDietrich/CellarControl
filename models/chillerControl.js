@@ -4,9 +4,10 @@ module.exports = {
         temperature: 0,
         compressorState: false,
     },
-    Current: {
+    current: {
         setpoint: 0,
         temperature: 0,
         compessorState: false,
+        ID: "",
     }
 }
