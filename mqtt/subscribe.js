@@ -1,4 +1,4 @@
-const chillerControl = require("../models/chillerControl");
+const chillerControl = require("../models/device");
 
 var Client;
 

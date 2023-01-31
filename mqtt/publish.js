@@ -6,27 +6,21 @@ module.exports = class PublishTopics {
     Client = client;
   }
 
-  PublishFermenter(fermenterControl) {
+  PublishTemperatures(Sensors) {
     if (Client.connected) {
       //console.log(`Sending Temp ${temp}`);
       Client.publish(
         "Sensor/Fermenter/Temperature",
-        fermenterControl.current.temperature.toString(),
+        Sensors.Fermenter.current.temp.toString(),
         options
       );
-    } else {
-      console.log("Client is not connected");
-      throw new error("Client Disconnected");
-    }
-  }
 
-  PublishChiller(chillerControl) {
-    if (Client.connected) {
       Client.publish(
         "Sensor/Chiller/Temperature",
-        chillerControl.current.temperature.toString(),
-        options
+        Sensors.Chiller.current.temp.toString(),
+        options,
       );
+
     } else {
       console.log("Client is not connected");
       throw new error("Client Disconnected");
